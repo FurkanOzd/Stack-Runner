@@ -1,12 +1,17 @@
 using GameManagementModule;
 using PathBlocksModule;
+using Signals;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using Zenject;
 
 public class GameManager : MonoBehaviour
 {
     [Inject]
-    private BlockController _blockController;
+    private readonly BlockController _blockController;
+
+    [Inject]
+    private readonly SignalBus _signalBus;
     
     [SerializeField]
     private Transform _blockParent;
@@ -40,31 +45,65 @@ public class GameManager : MonoBehaviour
         _blockController.Initialize(_blockParent, _xSpawnOffset, _blockMoveDuration, _finishBlockMaterial,
             _blockMaterials, _baseBlock);
         _gameState = GameState.ReadyToPlay;
+        
+        ListenEvents();
     }
 
     private void ListenEvents()
     {
+        _signalBus.Subscribe<GameStateChangedSignal>(OnGameStateChanged);
+    }
+
+    private void OnGameStateChanged(GameStateChangedSignal gameStateChangedSignal)
+    {
+        _gameState = gameStateChangedSignal.GameState;
+    }
+
+    public void OnUIButtonClicked()
+    {
+        switch (_gameState)
+        {
+            case GameState.ReadyToPlay:
+                SetUpNewLevel();
+                break;
+            case GameState.Fail:
+                RestartGame();
+                break;
+            case GameState.Success:
+                _levelCount++;
+                SetUpNewLevel();
+                break;
+        }
         
+        _signalBus.Fire(new GameStateChangedSignal(_gameState));
+    }
+
+    private void SetUpNewLevel()
+    {
+        _gameState = GameState.Playing;
+        _blockController.SetupLevel(_defaultBlockToFinishLevel + _levelCount * _blockCountIncreaserOnNewLevels);
+    }
+
+    private void RestartGame()
+    {
+        Scene currentScene = SceneManager.GetActiveScene();
+        SceneManager.UnloadSceneAsync(currentScene);
+        SceneManager.LoadScene(currentScene.buildIndex);
     }
 
     private void Update()
     {
+        if (_gameState != GameState.Playing)
+        {
+            return;
+        }
+        
         if (Input.GetMouseButtonDown(0))
         {
-            if (_gameState == GameState.Playing)
+            Block blockToMove = _blockController.StackBlock();
+            if (blockToMove != null)
             {
-                Block blockToMove = _blockController.StackBlock();
-
-                if (blockToMove != null)
-                {
-                    _playerController.UpdateMoveDirection(blockToMove.transform.position.x);
-                }
-            }
-
-            if (_gameState == GameState.ReadyToPlay)
-            {
-                _gameState = GameState.Playing;
-                _blockController.SetupLevel(_defaultBlockToFinishLevel + _levelCount * _blockCountIncreaserOnNewLevels);
+                _playerController.UpdateMoveDirection(blockToMove.transform.position.x);
             }
         }
     }

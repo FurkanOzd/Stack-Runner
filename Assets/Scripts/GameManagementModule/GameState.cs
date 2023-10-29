@@ -4,6 +4,7 @@ namespace GameManagementModule
     {
         ReadyToPlay,
         Playing,
+        SuccessAnimation,
         Success,
         Fail,
     }

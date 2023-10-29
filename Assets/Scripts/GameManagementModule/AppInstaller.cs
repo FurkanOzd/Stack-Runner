@@ -25,6 +25,8 @@ public class AppInstaller : MonoInstaller
     private void InstallSignals()
     {
         SignalBusInstaller.Install(Container);
+        
         Container.DeclareSignal<BlockFitSignal>().OptionalSubscriber();
+        Container.DeclareSignal<GameStateChangedSignal>().OptionalSubscriber();
     }
 }

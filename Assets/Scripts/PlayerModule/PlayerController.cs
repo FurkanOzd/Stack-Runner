@@ -1,9 +1,7 @@
-using System;
 using DG.Tweening;
 using GameManagementModule;
 using Signals;
 using UnityEngine;
-using UnityEngine.Playables;
 using Zenject;
 
 public class PlayerController : MonoBehaviour
@@ -59,13 +57,21 @@ public class PlayerController : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
+        if (!_isReadyToMove)
+        {
+            return;
+        }
+        
         if(_finishLayer == (_finishLayer | (1 << collision.gameObject.layer)))
         {
-            
+            _signalBus.Fire(new GameStateChangedSignal(GameState.SuccessAnimation));
+            Vector3 movePosition = collision.transform.position + collision.transform.localScale / 2;
+            movePosition.y = transform.position.y;
+            MoveToFinishBlockCenter(movePosition);
         }
     }
 
-    public void MoveToFinishBlockCenter(Vector3 position)
+    private void MoveToFinishBlockCenter(Vector3 position)
     {
         transform.DOMove(position, _finalBlockMoveDuration).OnComplete(() =>
         {
