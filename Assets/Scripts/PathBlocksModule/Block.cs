@@ -46,6 +46,7 @@ namespace PathBlocksModule
         private void Fall()
         {
             _rigidbody.isKinematic = false;
+            transform.DOKill();
         }
 
         public bool Broke(float xScaleFactor, bool upper)

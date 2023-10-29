@@ -14,26 +14,26 @@ public class GameManager : MonoBehaviour
     private Block _baseBlock;
 
     [SerializeField]
-    private float _moveDuration;
+    private float _blockMoveDuration;
     [SerializeField]
     private float _xSpawnOffset;
 
     [SerializeField]
     private Material[] _blockMaterials;
-
+    
     [Inject]
     private BlockController _blockController;
     
     private void Start()
     {
-        _blockController.Initialize(_blockParent, _xSpawnOffset, _moveDuration, _blockMaterials, _baseBlock);
+        _blockController.Initialize(_blockParent, _xSpawnOffset, _blockMoveDuration, _blockMaterials, _baseBlock);
     }
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            Block blockToMove = _blockController.FitBlock();
+            Block blockToMove = _blockController.StackBlock();
 
             if (blockToMove != null)
             {

@@ -1,10 +1,14 @@
+using Signals;
 using UnityEngine;
+using Zenject;
 
 namespace PathBlocksModule
 {
     public class BlockController
     {
         private readonly Block.Factory _blockFactory;
+
+        private readonly SignalBus _signalBus;
 
         private Material[] _blockMaterials;
 
@@ -19,9 +23,10 @@ namespace PathBlocksModule
         private float _moveDuration;
         private float _xSpawnOffset;
 
-        public BlockController(Block.Factory blockFactory)
+        public BlockController(Block.Factory blockFactory, SignalBus signalBus)
         {
             _blockFactory = blockFactory;
+            _signalBus = signalBus;
         }
         
         public void Initialize(Transform blockParentTransform, float xSpawnOffset, float moveDuration, Material[] blockMaterials, Block lastBlock)
@@ -65,8 +70,9 @@ namespace PathBlocksModule
             _blockFactory.Create(blockSpawnOptions);
         }
 
-        public Block FitBlock()
+        public Block StackBlock()
         {
+            const float toleranceMultiplier = 0.05f;
             bool perfectFit = false;
 
             Vector3 lastScale = _slidingBlock.transform.localScale;
@@ -74,12 +80,13 @@ namespace PathBlocksModule
             float difference = (_lastBlock.transform.position - _slidingBlock.transform.position).x;
             float absDifference = Mathf.Abs(difference);
             float brokeScaleFactor = (lastScale.x - absDifference);
-
+            float perfectFitToleranceValue = lastScale.x * toleranceMultiplier;
+            
             lastScale.x = brokeScaleFactor;
 
             bool isUpper = difference < 0;
             
-            if (absDifference >= 0.05f)
+            if (absDifference >= perfectFitToleranceValue)
             {
                 bool hasBroken = _slidingBlock.Broke(brokeScaleFactor, isUpper);
 
@@ -102,6 +109,8 @@ namespace PathBlocksModule
                 _slidingBlock.Stop();
                 perfectFit = true;
             }
+            
+            _signalBus.Fire(new BlockFitSignal(perfectFit));
 
             _lastBlock = _slidingBlock;
             

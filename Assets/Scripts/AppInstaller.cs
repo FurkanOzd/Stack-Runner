@@ -1,10 +1,12 @@
 using PathBlocksModule;
+using Signals;
 using Zenject;
 
 public class AppInstaller : MonoInstaller
 {
     public override void InstallBindings()
     {
+        InstallSignals();
         InstallFactories();
         InstallControllers();
     }
@@ -18,5 +20,11 @@ public class AppInstaller : MonoInstaller
     private void InstallControllers()
     {
         Container.BindInterfacesAndSelfTo<BlockController>().AsSingle().NonLazy();
+    }
+
+    private void InstallSignals()
+    {
+        SignalBusInstaller.Install(Container);
+        Container.DeclareSignal<BlockFitSignal>().OptionalSubscriber();
     }
 }
