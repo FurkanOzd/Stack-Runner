@@ -17,7 +17,7 @@ namespace PoolingModule
             CreatePool(initialPoolSize);
         }
         
-        public T Pull(object[] args)
+        public T Pull(object[] args = null)
         {
             IPoolable p = _objectPool.Count > 0 
                 ? _objectPool.Pop() 

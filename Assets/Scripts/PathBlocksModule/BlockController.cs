@@ -36,12 +36,12 @@ namespace PathBlocksModule
                 ? 1 
                 : -1;
             
-            SpawnNewBlock(false, _lastBlock.transform.localScale);
+            SpawnNewSlidingBlock(false, _lastBlock.transform.localScale);
         }
         
-        private void SpawnNewBlock(bool perfectFit, Vector3 scale)
+        private void SpawnNewSlidingBlock(bool perfectFit, Vector3 scale)
         {
-            if (perfectFit)
+            if (!perfectFit)
             {
                 _materialIndex++;
             }
@@ -52,28 +52,62 @@ namespace PathBlocksModule
             _moveDirection *= -1;
             
             BlockSpawnOptions blockSpawnOptions = new BlockSpawnOptions(_blockParentTransform,
-                _blockMaterials[_materialIndex], position, scale, _moveDuration, Block.BlockType.Solid);
+                _blockMaterials[_materialIndex], position, scale.x, _moveDuration, Block.BlockType.Solid);
 
             _slidingBlock = _blockFactory.Create(blockSpawnOptions);
         }
 
-        public void FitBlock()
+        private void SpawnBrokenBlock(Vector3 position, Vector3 scale)
         {
+            BlockSpawnOptions blockSpawnOptions = new BlockSpawnOptions(_blockParentTransform,
+                _blockMaterials[_materialIndex], position, scale.x, _moveDuration, Block.BlockType.Broken);
+            
+            _blockFactory.Create(blockSpawnOptions);
+        }
+
+        public Block FitBlock()
+        {
+            bool perfectFit = false;
+
+            Vector3 lastScale = _slidingBlock.transform.localScale;
+            
             float difference = (_lastBlock.transform.position - _slidingBlock.transform.position).x;
             float absDifference = Mathf.Abs(difference);
+            float brokeScaleFactor = (lastScale.x - absDifference);
 
-            float brokeScaleFactor = (_slidingBlock.transform.localScale.x - absDifference);
-            
-            Debug.Log(absDifference);
+            lastScale.x = brokeScaleFactor;
+
+            bool isUpper = difference < 0;
             
             if (absDifference >= 0.05f)
             {
-                _slidingBlock.Broke(brokeScaleFactor);
+                bool hasBroken = _slidingBlock.Broke(brokeScaleFactor, isUpper);
+
+                if (!hasBroken)
+                {
+                    return null;
+                }
+                
+                Vector3 brokenScale = _slidingBlock.transform.localScale;
+                Vector3 position = _slidingBlock.transform.position;
+
+                float xOffset = (brokenScale.x + absDifference) / 2;
+                position.x += isUpper ? xOffset : -xOffset;
+                
+                brokenScale.x = absDifference;
+                SpawnBrokenBlock(position, brokenScale);
             }
             else
             {
                 _slidingBlock.Stop();
+                perfectFit = true;
             }
+
+            _lastBlock = _slidingBlock;
+            
+            SpawnNewSlidingBlock(perfectFit, lastScale);
+            
+            return _lastBlock;
         }
     }
 }

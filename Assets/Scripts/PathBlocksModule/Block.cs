@@ -19,6 +19,10 @@ namespace PathBlocksModule
         private BlockType _blockType;
 
         private float _moveDuration;
+
+        private int _moveDirection;
+
+        private bool _isFitted;
         
         public event Action<IPoolable> ReturnToPoolEvent;
 
@@ -44,34 +48,45 @@ namespace PathBlocksModule
             _rigidbody.isKinematic = false;
         }
 
-        public void Broke(float xScaleFactor)
+        public bool Broke(float xScaleFactor, bool upper)
         {
             if (xScaleFactor <= 0f)
             {
                 Fall();
-                return;
+                return false;
             }
             
             Vector3 scale = transform.localScale;
+            Vector3 offset = Vector3.right * (transform.localScale.x - xScaleFactor) / 2;
             scale.x = xScaleFactor;
-
-            transform.localScale = scale;
-
+            
             transform.DOKill();
+            
+            transform.localScale = scale;
+            transform.position += upper ? -offset : offset;
+
+            _isFitted = true;
+
+            return true;
         }
 
         public void Stop()
         {
+            _isFitted = true;
             transform.DOKill();
         }
 
         private void OnTriggerExit(Collider other)
         {
-            Disable();
+            if (_isFitted)
+            {
+                Disable();
+            }
         }
 
         public void Activate()
         {
+            _isFitted = false;
             gameObject.SetActive(true);
         }
 

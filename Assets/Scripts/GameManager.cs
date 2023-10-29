@@ -33,7 +33,12 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            _blockController.FitBlock();
+            Block blockToMove = _blockController.FitBlock();
+
+            if (blockToMove != null)
+            {
+                _playerController.UpdateMoveDirection(blockToMove.transform.position.x);
+            }
         }
     }
 }

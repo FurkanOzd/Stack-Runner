@@ -33,11 +33,14 @@ namespace PathBlocksModule
             
             Transform blockTransform = block.transform;
             blockTransform.SetParent(blockSpawnOptions.ParentTransform);
-            blockTransform.localScale = blockSpawnOptions.Scale;
+
+            Vector3 scale = blockTransform.localScale;
+            scale.x = blockSpawnOptions.ScaleFactorX;
+            
+            blockTransform.localScale = scale;
             blockTransform.position = blockSpawnOptions.Position;
             
             block.Construct(blockSpawnOptions.MoveDuration, blockSpawnOptions.Material, blockSpawnOptions.BlockType);
-
             return block;
         }
     }
