@@ -11,6 +11,7 @@ namespace PathBlocksModule
         private readonly SignalBus _signalBus;
 
         private Material[] _blockMaterials;
+        private Material _finishBlockMaterial;
 
         private Transform _blockParentTransform;
 
@@ -19,6 +20,7 @@ namespace PathBlocksModule
 
         private int _moveDirection;
         private int _materialIndex;
+        private int _materialArrayLength;
 
         private float _moveDuration;
         private float _xSpawnOffset;
@@ -28,10 +30,12 @@ namespace PathBlocksModule
             _blockFactory = blockFactory;
             _signalBus = signalBus;
         }
-        
-        public void Initialize(Transform blockParentTransform, float xSpawnOffset, float moveDuration, Material[] blockMaterials, Block lastBlock)
+
+        public void Initialize(Transform blockParentTransform, float xSpawnOffset, float moveDuration,
+            Material finishBlockMaterial, Material[] blockMaterials, Block lastBlock)
         {
             _blockParentTransform = blockParentTransform;
+            _finishBlockMaterial = finishBlockMaterial;
             _blockMaterials = blockMaterials;
             _lastBlock = lastBlock;
             _moveDuration = moveDuration;
@@ -40,15 +44,24 @@ namespace PathBlocksModule
             _moveDirection = Random.Range(-100, 100) >= 0 
                 ? 1 
                 : -1;
-            
+
+            _materialArrayLength = _blockMaterials.Length;
+        }
+
+        public void SetupLevel(int blockCountToComplete)
+        {
             SpawnNewSlidingBlock(false, _lastBlock.transform.localScale);
         }
-        
+
         private void SpawnNewSlidingBlock(bool perfectFit, Vector3 scale)
         {
             if (!perfectFit)
             {
                 _materialIndex++;
+                if (_materialIndex == _materialArrayLength)
+                {
+                    _materialIndex = 0;
+                }
             }
 
             Vector3 position = new Vector3(_xSpawnOffset * _moveDirection, _lastBlock.transform.position.y,
@@ -106,7 +119,7 @@ namespace PathBlocksModule
             }
             else
             {
-                _slidingBlock.Stop();
+                _slidingBlock.Stack(_lastBlock);
                 perfectFit = true;
             }
             

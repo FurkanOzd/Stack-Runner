@@ -71,10 +71,15 @@ namespace PathBlocksModule
             return true;
         }
 
-        public void Stop()
+        public void Stack(Block previousBlock)
         {
-            _isFitted = true;
             transform.DOKill();
+            
+            _isFitted = true;
+            
+            Vector3 position = transform.position;
+            position.x = previousBlock.transform.position.x;
+            transform.position = position;
         }
 
         private void OnTriggerExit(Collider other)

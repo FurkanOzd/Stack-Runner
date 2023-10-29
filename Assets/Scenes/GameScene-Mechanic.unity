@@ -225,7 +225,7 @@ AudioSource:
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
   m_Volume: 1
-  m_Pitch: 1
+  m_Pitch: 1.5
   Loop: 0
   Mute: 0
   Spatialize: 0
@@ -321,13 +321,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioClips:
-  - {fileID: 8300000, guid: edc492c86141c1541b3d6c7f10960120, type: 3}
-  - {fileID: 8300000, guid: b292e7fa39a8b244aaf2896ce92ed998, type: 3}
-  - {fileID: 8300000, guid: cd699bd72da36144e94d230029d302d2, type: 3}
-  - {fileID: 8300000, guid: 92b5906375ac4014abff233f43f3a78c, type: 3}
-  - {fileID: 8300000, guid: 974f7fe816dace4439f26598f79bfd92, type: 3}
-  - {fileID: 8300000, guid: 50dd00808bda76a429e7edfb3c4c8953, type: 3}
-  - {fileID: 8300000, guid: 05486cc840f67ce47a0cc8b8e446ebac, type: 3}
+  - {fileID: 8300000, guid: 1b02daf702d56bb4c9284781e08027b3, type: 3}
+  - {fileID: 8300000, guid: 2b18f3ad3175ac946b0811dd6fb35f8f, type: 3}
+  - {fileID: 8300000, guid: 8c0633f06a67b424ba65a2508f489bd6, type: 3}
+  - {fileID: 8300000, guid: 00ba63b1987838a499f9722da62a90de, type: 3}
+  - {fileID: 8300000, guid: aad80fb764b2835488cb18482c199bed, type: 3}
+  - {fileID: 8300000, guid: 7f4c72c2757042740896ccaf01fa7465, type: 3}
+  - {fileID: 8300000, guid: d73efd6b1f8d1de418a59dd7ccbf66db, type: 3}
+  _breakAudioClip: {fileID: 8300000, guid: 679d1a2c59e99e849b5a411e085d32e7, type: 3}
   _audioSource: {fileID: 559950007}
 --- !u!4 &559950009
 Transform:
@@ -914,6 +915,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Layer
       value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 8499380396617752441, guid: 9dc05ea95466a534dbc35225402fe2b8,
+        type: 3}
+      propertyPath: _moveSpeed
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8818118342530770437, guid: 9dc05ea95466a534dbc35225402fe2b8,
         type: 3}

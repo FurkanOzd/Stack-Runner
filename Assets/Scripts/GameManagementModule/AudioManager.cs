@@ -8,14 +8,18 @@ public class AudioManager : MonoBehaviour
     private AudioClip[] _audioClips;
 
     [SerializeField]
+    private AudioClip _breakAudioClip;
+    private AudioClip _selectedAudioClip;
+
+    [SerializeField]
     private AudioSource _audioSource;
 
     [Inject]
     private SignalBus _signalBus;
 
-    private int _playIndex;
+    private int _stackIndex;
     private int _audioClipCount;
-
+    
     private void Start()
     {
         _audioClipCount = _audioClips.Length;
@@ -26,12 +30,14 @@ public class AudioManager : MonoBehaviour
     {
         if (blockFitSignal.IsSuccessFul)
         {
-            _playIndex++;
-            _playIndex = Mathf.Clamp(_playIndex, 0, _audioClipCount -1);
+            _selectedAudioClip = _audioClips[_stackIndex];
+            _stackIndex++;
+            _stackIndex = Mathf.Clamp(_stackIndex, 0, _audioClipCount - 1);
         }
         else
         {
-            _playIndex = 0;
+            _stackIndex = 0;
+            _selectedAudioClip = _breakAudioClip;
         }
         
         Play();
@@ -44,7 +50,7 @@ public class AudioManager : MonoBehaviour
     
     private void Play()
     {
-        _audioSource.clip = _audioClips[_playIndex];
+        _audioSource.clip = _selectedAudioClip;
         _audioSource.Play();
     }
 
