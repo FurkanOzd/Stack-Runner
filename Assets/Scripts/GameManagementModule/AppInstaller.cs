@@ -13,7 +13,7 @@ public class AppInstaller : MonoInstaller
 
     private void InstallFactories()
     {
-        Container.BindFactory<BlockSpawnOptions, Block, Block.Factory>()
+        Container.BindFactory<object[], Block, Block.Factory>()
             .FromFactory<BlockFactory>();
     }
 

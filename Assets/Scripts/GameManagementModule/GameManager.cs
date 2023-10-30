@@ -29,21 +29,24 @@ public class GameManager : MonoBehaviour
 
     [SerializeField]
     private Material[] _blockMaterials;
-    [SerializeField]
-    private Material _finishBlockMaterial;
 
     [SerializeField]
     private int _defaultBlockToFinishLevel;
     [SerializeField]
     private int _blockCountIncreaserOnNewLevels;
+
     private int _levelCount;
+    private int _currentLevelBlockCounter = 0;
+    private int _blocksToFinishLevel;
 
     private GameState _gameState;
     
     private void Start()
     {
-        _blockController.Initialize(_blockParent, _xSpawnOffset, _blockMoveDuration, _finishBlockMaterial,
-            _blockMaterials, _baseBlock);
+        _blocksToFinishLevel = _defaultBlockToFinishLevel;
+        
+        _blockController.Initialize(_blockParent, _xSpawnOffset, _blockMoveDuration, _blockMaterials, _baseBlock);
+        _blockController.SetupLevel(_blocksToFinishLevel);
         _gameState = GameState.ReadyToPlay;
         
         ListenEvents();
@@ -57,6 +60,11 @@ public class GameManager : MonoBehaviour
     private void OnGameStateChanged(GameStateChangedSignal gameStateChangedSignal)
     {
         _gameState = gameStateChangedSignal.GameState;
+
+        if (_gameState == GameState.ReachToFinalPlatform)
+        {
+            _playerController.MoveToFinishBlock(_blockController.GetFinishBlock());
+        }
     }
 
     public void OnUIButtonClicked()
@@ -64,24 +72,26 @@ public class GameManager : MonoBehaviour
         switch (_gameState)
         {
             case GameState.ReadyToPlay:
-                SetUpNewLevel();
+                StartLevel();
                 break;
             case GameState.Fail:
                 RestartGame();
                 break;
             case GameState.Success:
-                _levelCount++;
-                SetUpNewLevel();
+                _currentLevelBlockCounter = 0;
+                _blocksToFinishLevel += (++_levelCount * _blockCountIncreaserOnNewLevels);
+                _blockController.SetupLevel(_blocksToFinishLevel);
+                StartLevel();
                 break;
         }
         
         _signalBus.Fire(new GameStateChangedSignal(_gameState));
     }
 
-    private void SetUpNewLevel()
+    private void StartLevel()
     {
         _gameState = GameState.Playing;
-        _blockController.SetupLevel(_defaultBlockToFinishLevel + _levelCount * _blockCountIncreaserOnNewLevels);
+        _blockController.StartLevel();
     }
 
     private void RestartGame()
@@ -98,12 +108,20 @@ public class GameManager : MonoBehaviour
             return;
         }
         
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && _currentLevelBlockCounter < _blocksToFinishLevel)
         {
-            Block blockToMove = _blockController.StackBlock();
+            _currentLevelBlockCounter++;
+
+            bool isItLastBlock = _currentLevelBlockCounter >= _blocksToFinishLevel;
+
+            GameObject blockToMove = _blockController.StackBlock(!isItLastBlock);
             if (blockToMove != null)
             {
                 _playerController.UpdateMoveDirection(blockToMove.transform.position.x);
+            }
+            else
+            {
+                _signalBus.Fire(new GameStateChangedSignal(GameState.Fail));
             }
         }
     }

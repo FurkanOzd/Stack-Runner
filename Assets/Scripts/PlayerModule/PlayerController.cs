@@ -1,8 +1,11 @@
+using System;
 using DG.Tweening;
 using GameManagementModule;
+using PathBlocksModule;
 using Signals;
 using UnityEngine;
 using Zenject;
+using Task = System.Threading.Tasks.Task;
 
 public class PlayerController : MonoBehaviour
 {
@@ -17,7 +20,7 @@ public class PlayerController : MonoBehaviour
     private float _finalBlockMoveDuration;
 
     [SerializeField]
-    private LayerMask _finishLayer;
+    private LayerMask _failLayer;
 
     [Inject]
     private SignalBus _signalBus;
@@ -40,6 +43,11 @@ public class PlayerController : MonoBehaviour
     private void OnGameStateChanged(GameStateChangedSignal gameStateChangedSignal)
     {
         _isReadyToMove = gameStateChangedSignal.GameState == GameState.Playing;
+
+        if (_isReadyToMove)
+        {
+            _animator.Play(RunAnimationHash);
+        }
     }
 
     private void Update()
@@ -55,27 +63,26 @@ public class PlayerController : MonoBehaviour
         transform.DOMoveX(positionX, _slideDuration);
     }
 
-    private void OnCollisionEnter(Collision collision)
+    public void MoveToFinishBlock(Block blockToMove)
     {
-        if (!_isReadyToMove)
-        {
-            return;
-        }
+        Vector3 blockPosition = blockToMove.transform.position;
+        Vector3 movePosition = new Vector3(blockPosition.x, transform.position.y,
+            blockPosition.z + blockToMove.transform.localScale.z / 2);
         
-        if(_finishLayer == (_finishLayer | (1 << collision.gameObject.layer)))
+        transform.DOMove(movePosition, _finalBlockMoveDuration).OnComplete(() =>
         {
-            _signalBus.Fire(new GameStateChangedSignal(GameState.SuccessAnimation));
-            Vector3 movePosition = collision.transform.position + collision.transform.localScale / 2;
-            movePosition.y = transform.position.y;
-            MoveToFinishBlockCenter(movePosition);
-        }
+            PlaySuccessAnimationAsync();
+        });
     }
 
-    private void MoveToFinishBlockCenter(Vector3 position)
+    private async void PlaySuccessAnimationAsync()
     {
-        transform.DOMove(position, _finalBlockMoveDuration).OnComplete(() =>
-        {
-            _animator.Play(DanceAnimationHash);
-        });
+        const float animationLength = 2f;
+        
+        _animator.Play(DanceAnimationHash);
+        
+        await Task.Delay(TimeSpan.FromSeconds(animationLength));
+        
+        _signalBus.Fire(new GameStateChangedSignal(GameState.Success));
     }
 }

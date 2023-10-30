@@ -9,14 +9,14 @@ namespace PathBlocksModule
         private readonly Block.Factory _blockFactory;
 
         private readonly SignalBus _signalBus;
-
+        
         private Material[] _blockMaterials;
-        private Material _finishBlockMaterial;
-
         private Transform _blockParentTransform;
 
         private Block _lastBlock;
-        private Block _slidingBlock;
+        private SlidingBlock _slidingBlock;
+
+        private FinishBlock _finishBlock;
 
         private int _moveDirection;
         private int _materialIndex;
@@ -24,7 +24,7 @@ namespace PathBlocksModule
 
         private float _moveDuration;
         private float _xSpawnOffset;
-
+        
         public BlockController(Block.Factory blockFactory, SignalBus signalBus)
         {
             _blockFactory = blockFactory;
@@ -32,10 +32,9 @@ namespace PathBlocksModule
         }
 
         public void Initialize(Transform blockParentTransform, float xSpawnOffset, float moveDuration,
-            Material finishBlockMaterial, Material[] blockMaterials, Block lastBlock)
+            Material[] blockMaterials, Block lastBlock)
         {
             _blockParentTransform = blockParentTransform;
-            _finishBlockMaterial = finishBlockMaterial;
             _blockMaterials = blockMaterials;
             _lastBlock = lastBlock;
             _moveDuration = moveDuration;
@@ -49,6 +48,11 @@ namespace PathBlocksModule
         }
 
         public void SetupLevel(int blockCountToComplete)
+        {
+            CreateFinishBlock(blockCountToComplete);
+        }
+
+        public void StartLevel()
         {
             SpawnNewSlidingBlock(false, _lastBlock.transform.localScale);
         }
@@ -70,20 +74,34 @@ namespace PathBlocksModule
             _moveDirection *= -1;
             
             BlockSpawnOptions blockSpawnOptions = new BlockSpawnOptions(_blockParentTransform,
-                _blockMaterials[_materialIndex], position, scale.x, _moveDuration, Block.BlockType.Solid);
+                _blockMaterials[_materialIndex], position, scale.x, _moveDuration, Block.BlockType.SlidingBlock);
 
-            _slidingBlock = _blockFactory.Create(blockSpawnOptions);
+            _slidingBlock = _blockFactory.Create(new object[]{blockSpawnOptions}) as SlidingBlock;
+        }
+
+        private void CreateFinishBlock(int blocksToSpawn)
+        {
+            float scaleOffset = _lastBlock.transform.localScale.z;
+            
+            Vector3 lastBlockPosition = _lastBlock.transform.position;
+            Vector3 position = new Vector3(lastBlockPosition.x, lastBlockPosition.y,
+                lastBlockPosition.z + scaleOffset + (blocksToSpawn * scaleOffset));
+
+            BlockSpawnOptions blockSpawnOptions = new BlockSpawnOptions(_blockParentTransform,
+                default, position, 0, _moveDuration, Block.BlockType.FinishBlock);
+            
+            _finishBlock = _blockFactory.Create(new object[]{blockSpawnOptions}) as FinishBlock;
         }
 
         private void SpawnBrokenBlock(Vector3 position, Vector3 scale)
         {
             BlockSpawnOptions blockSpawnOptions = new BlockSpawnOptions(_blockParentTransform,
-                _blockMaterials[_materialIndex], position, scale.x, _moveDuration, Block.BlockType.Broken);
+                _blockMaterials[_materialIndex], position, scale.x, _moveDuration, Block.BlockType.BrokenBlock);
             
-            _blockFactory.Create(blockSpawnOptions);
+            _blockFactory.Create(new object[]{blockSpawnOptions});
         }
 
-        public Block StackBlock()
+        public GameObject StackBlock(bool spawnNewBlock)
         {
             const float toleranceMultiplier = 0.05f;
             bool perfectFit = false;
@@ -119,7 +137,7 @@ namespace PathBlocksModule
             }
             else
             {
-                _slidingBlock.Stack(_lastBlock);
+                _slidingBlock.Stack(_lastBlock.transform);
                 perfectFit = true;
             }
             
@@ -127,8 +145,17 @@ namespace PathBlocksModule
 
             _lastBlock = _slidingBlock;
             
-            SpawnNewSlidingBlock(perfectFit, lastScale);
-            
+            if (spawnNewBlock)
+            {
+                SpawnNewSlidingBlock(perfectFit, lastScale);
+
+            }
+            return _lastBlock.gameObject;
+        }
+
+        public Block GetFinishBlock()
+        {
+            _lastBlock = _finishBlock;
             return _lastBlock;
         }
     }

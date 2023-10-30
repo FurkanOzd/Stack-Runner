@@ -29,30 +29,44 @@ namespace GameManagementModule
         private void Start()
         {
             ListenEvents();
+            ToggleTapToPlay(true, GameState.ReadyToPlay);
         }
 
         private void ListenEvents()
         {
             _signalBus.Subscribe<GameStateChangedSignal>(OnGameStateChanged);
+            _tapToPlayButton.onClick.AddListener(OnTapToPlayButtonClick);
+        }
+
+        private void OnTapToPlayButtonClick()
+        {
+            gameObject.SetActive(false);
         }
 
         private void OnGameStateChanged(GameStateChangedSignal gameStateChangedSignal)
         {
+            GameState gameState = gameStateChangedSignal.GameState;
+            
+            bool toggleUI = gameState == GameState.Fail || gameState == GameState.Success;
+            
             switch (gameStateChangedSignal.GameState)
             {
                 case GameState.Fail:
                     ToggleLevelFailedPanel(true);
+                    ToggleTapToPlay(true, gameStateChangedSignal.GameState);
                     break;
                 case GameState.Success:
                     ToggleLevelSuccessPanel(true);
+                    ToggleTapToPlay(true, gameStateChangedSignal.GameState);
                     break;
                 case GameState.Playing:
                     ToggleLevelFailedPanel(false);
                     ToggleLevelSuccessPanel(false);
+                    ToggleTapToPlay(false, gameStateChangedSignal.GameState);
                     break;
             }
             
-            ToggleTapToPlay(gameStateChangedSignal.GameState != GameState.Playing, gameStateChangedSignal.GameState);
+            gameObject.SetActive(toggleUI);
         }
 
         private void ToggleTapToPlay(bool toggle, GameState gameState)

@@ -4,7 +4,7 @@ namespace GameManagementModule
     {
         ReadyToPlay,
         Playing,
-        SuccessAnimation,
+        ReachToFinalPlatform,
         Success,
         Fail,
     }
