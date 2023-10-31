@@ -1,3 +1,5 @@
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -15,6 +17,8 @@ namespace PathBlocksModule
         
         private float _moveDuration;
         
+        private CancellationTokenSource _cancellationTokenSource;
+
         public override void Construct(BlockSpawnOptions blockSpawnOptions)
         {
             _meshRenderer.material = blockSpawnOptions.Material;
@@ -43,6 +47,7 @@ namespace PathBlocksModule
         {
             _rigidbody.isKinematic = false;
             transform.DOKill();
+            DisableAsync().Forget();
         }
 
         public bool Broke(float xScaleFactor, bool upper)
@@ -74,6 +79,18 @@ namespace PathBlocksModule
             transform.position = position;
             transform.localScale = previousBlockTransform.localScale;
         }
+        
+        private async UniTaskVoid DisableAsync()
+        {
+            const float disableDelay = 3f;
+            
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+            
+            await UniTask.Delay(disableDelay, cancellationToken:_cancellationTokenSource.Token);
+            
+            Disable();
+        }
 
         public override void Disable()
         {
@@ -85,6 +102,12 @@ namespace PathBlocksModule
         {
             _rigidbody.isKinematic = true;
             base.Activate();
+        }
+        
+        private void OnDestroy()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
         }
     }
 }

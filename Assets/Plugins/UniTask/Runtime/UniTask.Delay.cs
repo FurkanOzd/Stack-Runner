@@ -3,6 +3,7 @@
 using Cysharp.Threading.Tasks.Internal;
 using System;
 using System.Collections;
+using System.Net.NetworkInformation;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using UnityEngine;
@@ -143,7 +144,13 @@ namespace Cysharp.Threading.Tasks
             var delayTimeSpan = TimeSpan.FromMilliseconds(millisecondsDelay);
             return Delay(delayTimeSpan, ignoreTimeScale, delayTiming, cancellationToken);
         }
-
+        
+        public static UniTask Delay(float seconds, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            var delayTimeSpan = TimeSpan.FromSeconds(seconds);
+            return Delay(delayTimeSpan, ignoreTimeScale, delayTiming, cancellationToken);
+        }
+        
         public static UniTask Delay(TimeSpan delayTimeSpan, bool ignoreTimeScale = false, PlayerLoopTiming delayTiming = PlayerLoopTiming.Update, CancellationToken cancellationToken = default(CancellationToken))
         {
             var delayType = ignoreTimeScale ? DelayType.UnscaledDeltaTime : DelayType.DeltaTime;

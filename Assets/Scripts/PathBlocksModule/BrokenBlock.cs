@@ -1,4 +1,5 @@
-using System.Threading.Tasks;
+using System.Threading;
+using Cysharp.Threading.Tasks;
 using UnityEngine;
 
 namespace PathBlocksModule
@@ -13,6 +14,8 @@ namespace PathBlocksModule
 
         [SerializeField]
         private LayerMask _failLayer;
+
+        private CancellationTokenSource _cancellationTokenSource;
         
         public override void Construct(BlockSpawnOptions blockSpawnOptions)
         {
@@ -33,6 +36,32 @@ namespace PathBlocksModule
         private void Fall()
         {
             _rigidbody.isKinematic = false;
+            
+            DisableAsync().Forget();
+        }
+
+        private async UniTaskVoid DisableAsync()
+        {
+            const float disableDelay = 3f;
+            
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource = new CancellationTokenSource();
+            
+            await UniTask.Delay(disableDelay, cancellationToken:_cancellationTokenSource.Token);
+            
+            Disable();
+        }
+
+        public override void Activate()
+        {
+            _rigidbody.isKinematic = true;
+            base.Activate();
+        }
+
+        private void OnDestroy()
+        {
+            _cancellationTokenSource?.Cancel();
+            _cancellationTokenSource?.Dispose();
         }
     }
 }

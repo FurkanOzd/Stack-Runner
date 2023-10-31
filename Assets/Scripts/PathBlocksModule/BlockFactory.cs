@@ -39,8 +39,12 @@ namespace PathBlocksModule
 
         public Block Create(object[] args = null)
         {
-            BlockSpawnOptions blockSpawnOptions = (BlockSpawnOptions)args[0];
-            return _blockPoolDictionary[blockSpawnOptions.BlockType].Pull(args);
+            BlockSpawnOptions blockSpawnOptions = (BlockSpawnOptions)args[0]; 
+            
+            Block block = _blockPoolDictionary[blockSpawnOptions.BlockType].Pull(args);
+            
+            block.Construct(blockSpawnOptions);
+            return block;
         }
     }
 }
