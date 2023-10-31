@@ -1,4 +1,5 @@
 using System;
+using Cinemachine;
 using DG.Tweening;
 using GameManagementModule;
 using PathBlocksModule;
@@ -24,13 +25,19 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField]
     private Rigidbody _rigidbody;
+    
+    [SerializeField]
+    public CinemachineVirtualCamera _rotatorCamera;
+
+    [SerializeField]
+    private Transform _camLookAtTransform;
 
     [Inject]
     private SignalBus _signalBus;
 
     private static readonly int DanceAnimationHash = Animator.StringToHash("Dance");
     private static readonly int RunAnimationHash = Animator.StringToHash("Run");
-
+    
     private bool _isReadyToMove;
 
     private void Start()
@@ -97,11 +104,26 @@ public class PlayerController : MonoBehaviour
     private async void PlaySuccessAnimationAsync()
     {
         const float animationLength = 2f;
-        
+        const float cameraMovementLength = 0.5f;
+
         _animator.Play(DanceAnimationHash);
+        _rotatorCamera.gameObject.SetActive(true);
+        
+        await Task.Delay(TimeSpan.FromSeconds(cameraMovementLength));
+        
+        RotateCamAroundPlayer();
         
         await Task.Delay(TimeSpan.FromSeconds(animationLength));
         
         _signalBus.Fire(new GameStateChangedSignal(GameState.Success));
+    }
+
+    private void RotateCamAroundPlayer()
+    {
+        _camLookAtTransform.DORotate(new Vector3(0f, 360f, 0f), 3f, RotateMode.FastBeyond360).SetEase(Ease.Linear).OnComplete(
+            () =>
+            {
+                _rotatorCamera.gameObject.SetActive(false);
+            });
     }
 }
