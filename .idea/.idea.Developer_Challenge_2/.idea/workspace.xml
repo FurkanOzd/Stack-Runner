@@ -3,22 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="b9a505f5-e0c4-495a-ae07-0a980582fb48" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/.idea.Developer_Challenge_2/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.Developer_Challenge_2/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Block.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Block.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Resources/Prefabs/Player.prefab" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Resources/Prefabs/Player.prefab" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scenes/GameScene-Mechanic.unity" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scenes/GameScene-Mechanic.unity" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/GameManager.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/Block.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/Block.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BlockController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BlockController.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BlockFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BlockFactory.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BlockSpawnOptions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BlockSpawnOptions.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PlayerController.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PoolingModule/StackPool.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PoolingModule/StackPool.cs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/manifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/manifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Packages/packages-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/Packages/packages-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BrokenBlock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/BrokenBlock.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/SlidingBlock.cs" beforeDir="false" afterPath="$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/SlidingBlock.cs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/DynamicsManager.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorBuildSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/EditorSettings.asset" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" beforeDir="false" afterPath="$PROJECT_DIR$/ProjectSettings/TagManager.asset" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -26,8 +16,10 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="HighlightingSettingsPerFile">
+    <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/5a41d6b7189842eca409fd0b1c3e3dcf17bf78/df/ac9b390f/Task.cs" root0="SKIP_HIGHLIGHTING" />
     <setting file="file://$APPLICATION_CONFIG_DIR$/resharper-host/DecompilerCache/decompiler/ba783288ca164d3099898a8819fcec1c159e00/87/db7c8597/Transform.cs" root0="SKIP_HIGHLIGHTING" />
-    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/Block.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/GameManagementModule/AudioManager.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/Assets/Scripts/PathBlocksModule/SlidingBlock.cs" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -87,8 +79,19 @@
       <option name="presentableId" value="Default" />
       <updated>1698501343990</updated>
       <workItem from="1698501361285" duration="1192000" />
-      <workItem from="1698584830076" duration="3429000" />
+      <workItem from="1698584830076" duration="21135000" />
+      <workItem from="1698699641071" duration="17381000" />
+      <workItem from="1698717997349" duration="571000" />
+      <workItem from="1698734031781" duration="883000" />
     </task>
+    <task id="LOCAL-00001" summary="pooling reverted">
+      <created>1698718489620</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1698718489620</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -110,5 +113,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <option name="CLEAR_INITIAL_COMMIT_MESSAGE" value="true" />
+    <MESSAGE value="pooling reverted" />
+    <option name="LAST_COMMIT_MESSAGE" value="pooling reverted" />
   </component>
 </project>
