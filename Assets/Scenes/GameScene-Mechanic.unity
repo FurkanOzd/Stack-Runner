@@ -181,6 +181,7 @@ MonoBehaviour:
   - {fileID: 2100000, guid: 5b25cd95e3901d24f89b00fa0a88cf4c, type: 2}
   _defaultBlockToFinishLevel: 10
   _blockCountIncreaserOnNewLevels: 3
+  _failCheckerBox: {fileID: 788467985}
 --- !u!4 &275023169
 Transform:
   m_ObjectHideFlags: 0
@@ -192,7 +193,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 788467986}
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -553,6 +555,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 691967149}
   m_CullTransparentMesh: 1
+--- !u!1 &788467984
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 788467986}
+  - component: {fileID: 788467985}
+  m_Layer: 9
+  m_Name: FailCheckPlane
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!65 &788467985
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788467984}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0.35, z: 0}
+--- !u!4 &788467986
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 788467984}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: -1, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 275023169}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &832575517
 GameObject:
   m_ObjectHideFlags: 0
@@ -1552,6 +1599,11 @@ PrefabInstance:
       propertyPath: m_Layer
       value: 7
       objectReference: {fileID: 0}
+    - target: {fileID: 7710598814459237716, guid: 9dc05ea95466a534dbc35225402fe2b8,
+        type: 3}
+      propertyPath: m_Constraints
+      value: 112
+      objectReference: {fileID: 0}
     - target: {fileID: 7846191260684724770, guid: 9dc05ea95466a534dbc35225402fe2b8,
         type: 3}
       propertyPath: m_Layer
@@ -1634,8 +1686,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8499380396617752441, guid: 9dc05ea95466a534dbc35225402fe2b8,
         type: 3}
+      propertyPath: _rigidbody
+      value: 
+      objectReference: {fileID: 1724962972}
+    - target: {fileID: 8499380396617752441, guid: 9dc05ea95466a534dbc35225402fe2b8,
+        type: 3}
       propertyPath: _slideDuration
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8499380396617752441, guid: 9dc05ea95466a534dbc35225402fe2b8,
+        type: 3}
+      propertyPath: _failLayer.m_Bits
+      value: 512
       objectReference: {fileID: 0}
     - target: {fileID: 8499380396617752441, guid: 9dc05ea95466a534dbc35225402fe2b8,
         type: 3}
@@ -1669,6 +1731,12 @@ MonoBehaviour:
 --- !u!4 &1724962970 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8180670691852981641, guid: 9dc05ea95466a534dbc35225402fe2b8,
+    type: 3}
+  m_PrefabInstance: {fileID: 1724962967}
+  m_PrefabAsset: {fileID: 0}
+--- !u!54 &1724962972 stripped
+Rigidbody:
+  m_CorrespondingSourceObject: {fileID: 7710598814459237716, guid: 9dc05ea95466a534dbc35225402fe2b8,
     type: 3}
   m_PrefabInstance: {fileID: 1724962967}
   m_PrefabAsset: {fileID: 0}

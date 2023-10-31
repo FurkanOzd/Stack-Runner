@@ -57,6 +57,12 @@ namespace PathBlocksModule
             SpawnNewSlidingBlock(false, _lastBlock.transform.localScale);
         }
 
+        public float GetPathLength()
+        {
+            Vector3 position = _finishBlock.transform.position - _lastBlock.transform.position;
+            return position.z;
+        }
+
         private void SpawnNewSlidingBlock(bool perfectFit, Vector3 scale)
         {
             if (!perfectFit)
@@ -151,6 +157,11 @@ namespace PathBlocksModule
 
             }
             return _lastBlock.gameObject;
+        }
+
+        public Vector3 GetStarterBlockPosition()
+        {
+            return _lastBlock.transform.position;
         }
 
         public Block GetFinishBlock()

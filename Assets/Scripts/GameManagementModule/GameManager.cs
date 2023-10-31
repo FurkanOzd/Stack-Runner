@@ -35,6 +35,9 @@ public class GameManager : MonoBehaviour
     [SerializeField]
     private int _blockCountIncreaserOnNewLevels;
 
+    [SerializeField]
+    private BoxCollider _failCheckerBox;
+
     private int _levelCount;
     private int _currentLevelBlockCounter = 0;
     private int _blocksToFinishLevel;
@@ -63,8 +66,17 @@ public class GameManager : MonoBehaviour
 
         if (_gameState == GameState.ReachToFinalPlatform)
         {
-            _playerController.MoveToFinishBlock(_blockController.GetFinishBlock());
+            Block finishBlock = _blockController.GetFinishBlock();
+            _playerController.MoveToFinishBlock(finishBlock);
         }
+    }
+
+    private void ArrangeFailChecker(Vector3 starterPosition)
+    {
+        float length = _blockController.GetPathLength();
+        
+        _failCheckerBox.size = new Vector3(100, 1, length * 2);
+        _failCheckerBox.center = new Vector3(starterPosition.x, _failCheckerBox.center.y, starterPosition.z);
     }
 
     public void OnUIButtonClicked()
@@ -91,6 +103,7 @@ public class GameManager : MonoBehaviour
     private void StartLevel()
     {
         _gameState = GameState.Playing;
+        ArrangeFailChecker(_blockController.GetStarterBlockPosition());
         _blockController.StartLevel();
     }
 
@@ -118,10 +131,6 @@ public class GameManager : MonoBehaviour
             if (blockToMove != null)
             {
                 _playerController.UpdateMoveDirection(blockToMove.transform.position.x);
-            }
-            else
-            {
-                _signalBus.Fire(new GameStateChangedSignal(GameState.Fail));
             }
         }
     }

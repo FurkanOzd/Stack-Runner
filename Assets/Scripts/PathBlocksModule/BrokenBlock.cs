@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 namespace PathBlocksModule
@@ -9,6 +10,9 @@ namespace PathBlocksModule
 
         [SerializeField]
         private MeshRenderer _meshRenderer;
+
+        [SerializeField]
+        private LayerMask _failLayer;
         
         public override void Construct(BlockSpawnOptions blockSpawnOptions)
         {
@@ -31,8 +35,17 @@ namespace PathBlocksModule
             _rigidbody.isKinematic = false;
         }
 
-        private void OnCollisionEnter(Collision collision)
+        private void OnTriggerExit(Collider collider)
         {
+            if ((collider.gameObject.layer & (1 << _failLayer)) != 0)
+            {
+               DisableAsync();
+            }
+        }
+
+        private async void DisableAsync()
+        {
+            await Task.Delay(3000);
             Disable();
         }
     }

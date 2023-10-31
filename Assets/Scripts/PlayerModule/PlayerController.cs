@@ -22,6 +22,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField]
     private LayerMask _failLayer;
 
+    [SerializeField]
+    private Rigidbody _rigidbody;
+
     [Inject]
     private SignalBus _signalBus;
 
@@ -73,6 +76,22 @@ public class PlayerController : MonoBehaviour
         {
             PlaySuccessAnimationAsync();
         });
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (!_isReadyToMove)
+        {
+            return;
+        }
+        
+        if ((other.gameObject.layer & (1 << _failLayer)) != 0)
+        {
+            _rigidbody.constraints = RigidbodyConstraints.None;
+            _signalBus.Fire(new GameStateChangedSignal(GameState.Fail));
+
+            _animator.enabled = false;
+        }
     }
 
     private async void PlaySuccessAnimationAsync()
