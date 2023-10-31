@@ -33,20 +33,6 @@ namespace PathBlocksModule
         private void Fall()
         {
             _rigidbody.isKinematic = false;
-            
-            DisableAsync();
-        }
-
-        private async void DisableAsync()
-        {
-            await Task.Delay(3000);
-            Disable();
-        }
-
-        public override void Activate()
-        {
-            _rigidbody.isKinematic = true;
-            base.Activate();
         }
     }
 }
