@@ -65,6 +65,8 @@ public class PlayerController : MonoBehaviour
         if (_isReadyToMove)
         {
             transform.position += transform.forward * (Time.deltaTime * _moveSpeed);
+            
+            CheckForFail();
         }
     }
 
@@ -84,21 +86,19 @@ public class PlayerController : MonoBehaviour
             PlaySuccessAnimationAsync();
         });
     }
-
-    private void OnTriggerEnter(Collider other)
+    
+    private void CheckForFail()
     {
-        if (!_isReadyToMove)
+        if (Physics.Raycast(transform.position, -transform.up, out RaycastHit hit, 5f))
         {
-            return;
-        }
-        
-        if ((other.gameObject.layer & (1 << _failLayer)) != 0)
-        {
-            _rigidbody.constraints = RigidbodyConstraints.None;
-            _signalBus.Fire(new GameStateChangedSignal(GameState.Fail));
+            if((hit.transform.gameObject.layer & (1 << _failLayer)) != 0)
+            {
+                _rigidbody.constraints = RigidbodyConstraints.None;
+                _signalBus.Fire(new GameStateChangedSignal(GameState.Fail));
 
-            _animator.enabled = false;
-        }
+                _animator.enabled = false;
+            }
+        };
     }
 
     private async void PlaySuccessAnimationAsync()
