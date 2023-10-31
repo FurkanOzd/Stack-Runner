@@ -88,5 +88,11 @@ namespace PathBlocksModule
             await Task.Delay(3000);
             Disable();
         }
+
+        public override void Activate()
+        {
+            _rigidbody.isKinematic = true;
+            base.Activate();
+        }
     }
 }
