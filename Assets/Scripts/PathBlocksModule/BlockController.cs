@@ -47,14 +47,15 @@ namespace PathBlocksModule
             _materialArrayLength = _blockMaterials.Length;
         }
 
-        public void SetupLevel(int blockCountToComplete)
+        public void SetupLevel()
         {
-            CreateFinishBlock(blockCountToComplete);
         }
 
-        public void StartLevel()
+        public void StartLevel(int blockCountToComplete)
         {
             SpawnNewSlidingBlock(false, _lastBlock.transform.localScale);
+            CreateFinishBlock(blockCountToComplete);
+
         }
 
         public float GetPathLength()
@@ -91,7 +92,7 @@ namespace PathBlocksModule
             
             Vector3 lastBlockPosition = _lastBlock.transform.position;
             Vector3 position = new Vector3(lastBlockPosition.x, lastBlockPosition.y,
-                lastBlockPosition.z + scaleOffset + (blocksToSpawn * scaleOffset));
+                lastBlockPosition.z + scaleOffset + (blocksToSpawn * _slidingBlock.transform.localScale.z));
 
             BlockSpawnOptions blockSpawnOptions = new BlockSpawnOptions(_blockParentTransform,
                 default, position, 0, _moveDuration, Block.BlockType.FinishBlock);

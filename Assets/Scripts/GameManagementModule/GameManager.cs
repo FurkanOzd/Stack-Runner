@@ -49,7 +49,6 @@ public class GameManager : MonoBehaviour
         _blocksToFinishLevel = _defaultBlockToFinishLevel;
         
         _blockController.Initialize(_blockParent, _xSpawnOffset, _blockMoveDuration, _blockMaterials, _baseBlock);
-        _blockController.SetupLevel(_blocksToFinishLevel);
         _gameState = GameState.ReadyToPlay;
         
         ListenEvents();
@@ -91,8 +90,8 @@ public class GameManager : MonoBehaviour
                 break;
             case GameState.Success:
                 _currentLevelBlockCounter = 0;
-                _blocksToFinishLevel += (++_levelCount * _blockCountIncreaserOnNewLevels);
-                _blockController.SetupLevel(_blocksToFinishLevel);
+                _levelCount++;
+                _blocksToFinishLevel = _defaultBlockToFinishLevel + (_levelCount * _blockCountIncreaserOnNewLevels);
                 StartLevel();
                 break;
         }
@@ -103,8 +102,8 @@ public class GameManager : MonoBehaviour
     private void StartLevel()
     {
         _gameState = GameState.Playing;
+        _blockController.StartLevel(_blocksToFinishLevel);
         ArrangeFailChecker(_blockController.GetStarterBlockPosition());
-        _blockController.StartLevel();
     }
 
     private void RestartGame()
@@ -124,7 +123,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0) && _currentLevelBlockCounter < _blocksToFinishLevel)
         {
             _currentLevelBlockCounter++;
-
+            
             bool isItLastBlock = _currentLevelBlockCounter >= _blocksToFinishLevel;
 
             GameObject blockToMove = _blockController.StackBlock(!isItLastBlock);

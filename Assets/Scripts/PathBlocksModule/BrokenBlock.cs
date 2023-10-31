@@ -33,20 +33,20 @@ namespace PathBlocksModule
         private void Fall()
         {
             _rigidbody.isKinematic = false;
-        }
-
-        private void OnTriggerExit(Collider collider)
-        {
-            if ((collider.gameObject.layer & (1 << _failLayer)) != 0)
-            {
-               DisableAsync();
-            }
+            
+            DisableAsync();
         }
 
         private async void DisableAsync()
         {
             await Task.Delay(3000);
             Disable();
+        }
+
+        public override void Activate()
+        {
+            _rigidbody.isKinematic = true;
+            base.Activate();
         }
     }
 }

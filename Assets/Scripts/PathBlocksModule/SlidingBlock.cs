@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using DG.Tweening;
 using UnityEngine;
 
@@ -43,6 +44,7 @@ namespace PathBlocksModule
         {
             _rigidbody.isKinematic = false;
             transform.DOKill();
+            DisableAsync();
         }
 
         public bool Broke(float xScaleFactor, bool upper)
@@ -79,6 +81,12 @@ namespace PathBlocksModule
         {
             transform.DOKill();
             base.Disable();
+        }
+
+        private async void DisableAsync()
+        {
+            await Task.Delay(3000);
+            Disable();
         }
     }
 }

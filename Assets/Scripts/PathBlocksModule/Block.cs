@@ -11,7 +11,7 @@ namespace PathBlocksModule
 
         public abstract void Construct(BlockSpawnOptions blockSpawnOptions);
         
-        public void Activate()
+        public virtual void Activate()
         {
             gameObject.SetActive(true);
         }
