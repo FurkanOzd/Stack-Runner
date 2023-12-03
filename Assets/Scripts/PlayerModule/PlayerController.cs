@@ -115,15 +115,16 @@ public class PlayerController : MonoBehaviour
         
         await Task.Delay(TimeSpan.FromSeconds(animationLength));
         
+        _rotatorCamera.gameObject.SetActive(false);
+        
         _signalBus.Fire(new GameStateChangedSignal(GameState.Success));
     }
 
     private void RotateCamAroundPlayer()
     {
-        _camLookAtTransform.DORotate(new Vector3(0f, 360f, 0f), 3f, RotateMode.FastBeyond360).SetEase(Ease.Linear).OnComplete(
-            () =>
-            {
-                _rotatorCamera.gameObject.SetActive(false);
-            });
+        const float rotateDuration = 3f;
+
+        _camLookAtTransform.DORotate(new Vector3(0f, 360f, 0f), rotateDuration, RotateMode.FastBeyond360)
+            .SetEase(Ease.Linear);
     }
 }
